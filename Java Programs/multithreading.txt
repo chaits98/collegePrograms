@@ -1,0 +1,81 @@
+//Multithreading.java
+package multithreading;
+
+public class Multithreading {
+
+
+	public static void main(String[] args) {
+		Thread t1 = new Thread(new ThreadClassOne());
+		Thread t2 = new Thread(new ThreadClassTwo());
+		t1.setPriority(Thread.MAX_PRIORITY);
+		t2.setPriority(Thread.MIN_PRIORITY);
+		t1.start();
+		t2.start();
+		
+		// suspend t1 for 100 milliseconds by making 
+		// the main thread sleep for the same
+		t1.suspend();
+		try {
+			Thread.sleep(100);
+		} catch (Exception e) {
+		
+		}
+		t1.resume();
+		
+		while(t1.isAlive() || t2.isAlive()) {
+			System.out.println(Thread.currentThread().getName() + "\t\t....\t Still waiting");
+			try {
+				// System.out.println(Thread.currentThread().getName() + " going to sleep for 10 secs");
+				// Thread.sleep(10000);
+				
+				// join(ms) waits for 10 ms or for the thread to finish
+				t1.join(10);
+				t2.join(10);
+			} catch (Exception e) {
+				System.out.println("bye");
+			}
+		}
+	}
+	
+}
+
+
+//ThreadClassOne.java
+package multithreading;
+
+public class ThreadClassOne implements Runnable {
+	
+	@Override
+	public void run() {
+		for(int i = 0; i <= 100; i += 2) {
+			System.out.println(Thread.currentThread().getName() + " \t : \t " + i);
+			try {
+				Thread.sleep(0, 1);
+			} catch (Exception e) {
+				System.out.println(Thread.currentThread().getName() + " interrupted");
+			}
+		}
+	}
+}
+
+
+
+//ThreadClassTwo.java
+package multithreading;
+
+public class ThreadClassTwo implements Runnable {
+	
+	@Override
+	public void run() {
+		for(int i = 1; i < 100; i += 2) {
+			System.out.println(Thread.currentThread().getName() + " \t ~ \t " + i);
+			try {
+				Thread.sleep(0, 1);
+			} catch (Exception e) {
+				System.out.println(Thread.currentThread().getName() + " interrupted");
+			}
+		}
+	}
+}
+
+
